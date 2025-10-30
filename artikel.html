@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>artikel</title>
+  <link rel="stylesheet" href="/style/common.css">
+  <link rel="stylesheet" href="/style/nav.css">
+  <link rel="stylesheet" href="/style/footer.css">
+  <link rel="stylesheet" href="/style/artikel.css">
+  <script src="/Script/sidenav.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="index.html" class="logo">Dar.</a>
+    <a class="nav-menu" onclick="showSidebar()"><img src="./img/menu.svg"></a>
+  </nav>
+
+  <div role="navigation" class="primary-navigation sidenav">
+    <ul>
+      <li class="close" onclick="hideSidebar()"><img src="./img/close.svg"></li>
+      <li><a href="../index.html">Beranda</a></li>
+      <li><a href="#" onclick="showDropdown()">Artikel &dtrif;</a>
+        <ul class="dropdown">
+          <li><a href="/Jurnal/jurnal.html">Jurnal</a></li>
+          <li><a href="/Film/film.html">Film</a></li>
+          <li><a href="/Buku/buku.html">Buku</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <main>
+    <div class="main-article">
+      <div class="article-header">
+        <p class="date">23 Oktober 2025</p>
+        <h1 class="title">Why we lose? </h1>
+      </div>
+      <div class="article-image">
+        <div class="image" style="background-image: url(./img/hd.jpg)"></div>
+      </div>
+      <div class="article-body">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta ipsam inventore nemo provident corporis neque omnis sed illum, culpa soluta architecto doloribus asperiores iusto ad rem, aperiam magnam unde veniam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero quis iure et quia pariatur. Debitis quam minima incidunt fugiat, voluptatem nobis eligendi odit corrupti aspernatur inventore! Eligendi excepturi eos quas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur blanditiis officia sint. Numquam corporis neque voluptatibus itaque esse, iste asperiores vitae quisquam nostrum placeat, dolor doloribus fuga quaerat omnis dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus eius saepe maiores, voluptates nobis doloribus repellendus voluptatem debitis velit porro deserunt voluptatibus. Odit sequi quas dolorum, possimus impedit aut rem.</p>
+
+        <p>Lorem Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium quisquam aperiam sed exercitationem tenetur dolores. Cum repellendus vero quas pariatur maiores molestiae ad laudantium cumque sunt! Laudantium consequatur ut nihil. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime fugit, mollitia error officiis dignissimos neque exercitationem quos odit ratione dolor excepturi! Nesciunt laudantium praesentium earum at necessitatibus corporis obcaecati tempore! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam temporibus rerum et iure voluptatum tempore quidem aspernatur! Sit molestiae ut ratione, ipsa voluptatibus quasi a, mollitia quod asperiores, quisquam vel? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod suscipit mollitia modi dignissimos exercitationem, odio, fugiat harum nisi officiis nostrum ipsa architecto sed quidem alias illum hic, accusamus ducimus soluta. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore perspiciatis totam ab sed perferendis ipsa aliquam aut. Cupiditate voluptas reiciendis quod eius iste alias laboriosam pariatur, natus incidunt odio accusamus! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique tempore velit blanditiis, voluptate nostrum repellendus earum. Illum eveniet illo tempore sapiente id ex fuga, accusamus temporibus mollitia aspernatur, hic eligendi!</p>
+      </div>
+      <div class="article-footer">
+        <div class="left">
+          <img src="./img/before.svg">
+          <a>Before</a>
+        </div>
+        <div class="mid">
+          <a>Jurnal</a>
+        </div>
+        <div class="right">
+          <a>Next</a>
+          <img src="./img/next.svg">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="left">
+      <a class="logo-footer">Dar.</a>
+    </div>
+    <div class="mid">
+      <h3>Terima kasih sudah berkunjung</h3>
+    </div>
+    <div class="right">
+      <a><img src="./img/email-blue.svg"></a>
+    </div>
+  </footer>
+</body>
+
+</html>

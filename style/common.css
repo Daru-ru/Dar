@@ -1,0 +1,37 @@
+:root {
+      --colorprimary: black;
+      --colorsecondary: white;
+      --coloraccent: rgba(12, 162, 255);
+      --colorfooter: rgba(37, 51, 84);
+      --ff: system-ui, sans-serif;
+      --h1: bold 54px/64px var(--ff);
+      --h2: bold 36px/36px var(--ff);
+      --h3: bold 24px/30px var(--ff);
+      --links: bold 18px/18px var(--ff);
+      --p: 18px/30px var(--ff);
+      --subtext: 12px/20px var(--ff);
+      --shadow: #00000030 0px 0px 10px 0px;
+      --shadowdark: #00000030 0px 5px 10px 5px;
+      --logo: bold
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    h1 {
+      font: var(--h1);
+    }
+
+    h2 {
+      font: var(--h2);
+    }
+
+    h3 {
+      font: var(--h3)
+    }
+
+    p {
+      font: var(--p);
+    }

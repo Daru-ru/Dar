@@ -1,0 +1,106 @@
+:root {
+  --colorprimary: black;
+  --colorsecondary: white;
+  --coloraccent: rgba(12, 162, 255);
+  --colorfooter: rgba(37, 51, 84);
+  --ff: system-ui, sans-serif;
+  --h1: bold 54px/64px var(--ff);
+  --h2: bold 36px/36px var(--ff);
+  --h3: bold 24px/30px var(--ff);
+  --links: bold 18px/18px var(--ff);
+  --p: 18px/30px var(--ff);
+  --subtext: 12px/20px var(--ff);
+  --shadow: #00000030 0px 0px 10px 0px;
+  --shadowdark: #00000030 0px 5px 10px 5px;
+  --logo: bold
+}
+
+.first-layout {
+  height: auto;
+  min-height: 400px;
+  background-color: var(--coloraccent);
+  color: var(--colorsecondary);
+  padding: 36px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.second-layout {
+  padding: 36px;
+}
+
+.grid-container {
+  width: min(75rem, 100%);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 2rem;
+}
+
+.card {
+  padding: 2.5rem;
+  background-image: linear-gradient(to bottom left, #e0e4e5, #f2f6f9);
+  border-radius: 2rem;
+  gap: 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
+  display: grid;
+  grid-template: 'title icon' 'content content' 'bar bar' / 1fr auto;
+  font-family: system-ui, sans-serif;
+  color: #444447;
+  box-shadow:
+    inset -2px 2px hsl(0 0 100% / 1),
+    -20px 20px 40px hsl(0 0 0 / .25);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  .title {
+    font-size: 1.5rem;
+    grid-area: title;
+    align-self: end;
+    text-transform: uppercase;
+    font-weight: 500;
+    word-break: break-all;
+
+  }
+
+  .icon {
+    grid-area: icon;
+    font-size: larger;
+
+
+  }
+
+  .content {
+    grid-area: content;
+
+    &>*:first-child {
+      margin-top: 0rem
+    }
+
+    &>*:last-child {
+      margin-bottom: 0rem
+    }
+  }
+
+  &::after {
+    content: "";
+    grid-area: bar;
+    height: 2px;
+    background: var(--coloraccent);
+    /*     margin-inline: -1.5rem; */
+  }
+}
+
+.card:hover {
+  transform: scale(1.05) translateY(-5px);
+
+}
+
+.toArticle-link {
+  font: var(--links);
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}

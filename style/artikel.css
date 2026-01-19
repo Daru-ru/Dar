@@ -62,8 +62,22 @@
 }
 
 .article-body p {
-  margin-bottom: 36px;
+  margin-bottom: 1.1em;
+  line-height: 1.6;
   text-align: justify;
+  font-size: 18px;
+}
+
+@media (max-width: 600px) {
+.article-body p {
+  font-size: 19px;
+  text-align: left;
+}
+}
+
+.article-body h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
 }
 
 .article-footer {

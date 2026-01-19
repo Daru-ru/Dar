@@ -19,10 +19,11 @@ footer {
   height: 70px;
   background-color: var(--colorfooter);
   display: grid;
-  grid-template-columns: 150px 1fr 150px;
+  grid-template-columns: 1fr 1fr ;
   align-items: center;
   padding: 12px 36px;
   color: white;
+  
 }
 
 
@@ -32,39 +33,27 @@ footer .left {
   align-items: center;
 }
 
-footer .mid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 footer .right {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  font: var(--h3);
 }
 
-@media (max-width: 710px) {
-  footer {
-    grid-template-columns: 1fr;
-    padding: 0;
-  }
 
-  footer .mid h3 {
-    font: var(--p);
-  }
+.toEmail {
+  color: white;
+  text-decoration: underline;
+}
 
-  footer .left {
-    display: none;
-  }
-
-  footer .right {
-    display: none;
-  }
+.toEmail:visited {
+  color: white;
 }
 
 .logo-footer {
   font: var(--h2);
   text-decoration: none;
   color: var(--colorsecondary);
+  cursor: pointer;
 }

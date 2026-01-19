@@ -104,3 +104,14 @@
   align-items: center;
   margin-top: 2px;
 }
+
+.quote {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+@media (max-width: 600px) {
+  .quote {
+    text-align: center;
+  }
+}

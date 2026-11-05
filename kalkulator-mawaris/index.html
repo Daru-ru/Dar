@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Mawaris</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 75px auto 75px;
+      height: 100vh;
+      row-gap: 2em;
+      background-color: #f8f8f8;
+    }
+
+    .header {
+      background-color: #fff;
+      border-bottom: 1px solid #e5e5e5;
+      display: grid;
+      place-content: center;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 2em;
+
+      @media all and (max-width: 700px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        row-gap: 2em;
+      }
+    }
+
+
+    #jumlahHarta {
+      max-width: 200px;
+    }
+
+
+
+    .jumlah {
+      display: none;
+      width: 3em;
+    }
+
+    .jumlahLabel {
+      display: none;
+    }
+
+    .form-group {
+      display: grid;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 8px;
+      background-color: #F9F6EE;
+      row-gap: 6px;
+    }
+
+    .form-group > :first-child {
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+
+    .form-group > div {
+      margin: 5px;
+    }
+
+    .input-container {
+      display: grid;
+      row-gap: 2em;
+      width: 90%;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      margin: auto;
+      background-color: #fff;
+      padding: 16px;
+    }
+
+    .result-container {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .result-container > div {
+      background-color: #fff;
+      position: sticky;
+      top: 5px;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      min-height: 150px;
+      padding: 26px;
+    }
+
+    #hasilMawaris {
+      margin: auto;
+    }
+
+    .radio-container {
+      display: grid;
+    }
+
+    table {
+      border-collapse: collapse;
+      border: 2px solid rgb(200 200 200);
+      letter-spacing: 1px;
+      font-size: 1.1em;
+    }
+
+    td,
+    th {
+      border: 1px solid rgb(190 190 190);
+      padding: 10px 20px;
+    }
+
+    #calculate {
+      height: 36px;
+      font-weight: 600;
+      background-color: #f9eecf;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    #calculate:hover {
+      background-color: #f9eecf;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    #calculate:active {
+      background-color: #f9eecf;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    footer {
+      background-color: #fff;
+      border-bottom: #e5e5e5;
+      display: grid;
+      place-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>Kalkulator Mawaris</h1>
+  </header>
+  <main class="main">
+    
+    <section class="input-container">
+
+      <div class="form-group">
+        <label for="jumlahHarta">jumlah harta</label>
+        <input type="number" id="jumlahHarta" min="1" value="1">
+      </div>
+      
+        
+    </section>
+
+    
+    <section class="result-container">
+      <div>
+        <table id="hasilMawaris">
+          <tr>
+            <th>Muhaqqi</th>
+            <th>Bagian</th>
+          </tr>
+        </table>
+      </div>
+      
+    </section>
+    
+  </main>
+  <footer class="footer"><h1>.....</h1></footer>
+  
+  <script type="module">
+    import {lcm} from "https://esm.sh/mathjs";
+
+    function mawaris(listMuhaqqi, harta) {
+      const muhaqqiHidup = Object.keys(listMuhaqqi);
+      const hasil = {};
+
+      if(muhaqqiHidup.includes("anakLk")) {
+       hasil["anakLk"] = anakLk(listMuhaqqi.anakLk, harta, muhaqqiHidup);
+      }
+
+      if(muhaqqiHidup.includes("anakPr")) {
+       hasil["anakPr"] = anakPr(listMuhaqqi.anakPr, harta, muhaqqiHidup);
+      }
+
+      if(muhaqqiHidup.includes("suami")) {
+       hasil["suami"] = suami(listMuhaqqi.suami, harta, muhaqqiHidup);
+      }
+
+      if(muhaqqiHidup.includes("istri")) {
+       hasil["istri"] = istri(listMuhaqqi.istri, harta, muhaqqiHidup);
+      }
+
+      if(muhaqqiHidup.includes("ayah")) {
+       hasil["ayah"] = ayah(listMuhaqqi.ayah, harta, muhaqqiHidup);
+      }
+
+      if(muhaqqiHidup.includes("ibu")) {
+       hasil["ibu"] = ibu(listMuhaqqi.ibu, harta, muhaqqiHidup, listMuhaqqi);
+      }
+
+      if(muhaqqiHidup.includes("cucuLkdLk")) {
+       hasil["cucuLkdLk"] = cucuLkdLk(listMuhaqqi.cucuLkdLk, harta, muhaqqiHidup);
+      }
+
+      if(muhaqqiHidup.includes("cucuPrdLk")) {
+       hasil["cucuPrdLk"] = cucuPrdLk(listMuhaqqi.cucuPrdLk, harta, muhaqqiHidup, listMuhaqqi);
+      }
+
+      if(muhaqqiHidup.includes("kakekY")) {
+        hasil["kakekY"] = kakekY(listMuhaqqi.kakekY, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("nenekY")) {
+        hasil["nenekY"] = nenekY(listMuhaqqi.nenekY, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("saudaraYB")) {
+        hasil["saudaraYB"] = saudaraYB(listMuhaqqi.saudaraYB, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("saudariYB")) {
+        hasil["saudariYB"] = saudariYB(listMuhaqqi.saudariYB, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("saudaraY")) {
+        hasil["saudaraY"] = saudaraY(listMuhaqqi.saudaraY, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("saudariY")) {
+        hasil["saudariY"] = saudariY(listMuhaqqi.saudariY, harta, muhaqqiHidup, listMuhaqqi)
+      }
+
+      if(muhaqqiHidup.includes("keponakanYB")) {
+        hasil["keponakanYB"] = keponakanYB(listMuhaqqi.keponakanYB, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("keponakanY")) {
+        hasil["keponakanY"] = keponakanY(listMuhaqqi.keponakanY, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("pamanYB")) {
+        hasil["pamanYB"] = pamanYB(listMuhaqqi.pamanYB, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("pamanY")) {
+        hasil["pamanY"] = pamanY(listMuhaqqi.pamanY, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("sepupuYB")) {
+        hasil["sepupuYB"] = sepupuYB(listMuhaqqi.sepupuYB, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("sepupuY")) {
+        hasil["sepupuY"] = sepupuY(listMuhaqqi.sepupuY, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("nenekB")) {
+        hasil["nenekB"] = nenekB(listMuhaqqi.nenekB, harta, muhaqqiHidup)
+      }
+
+      if(muhaqqiHidup.includes("saudara/iB")) {
+        hasil["saudara/iB"] = saudaraiB(listMuhaqqi["saudara/iB"], harta, muhaqqiHidup)
+      }
+
+      console.log(hasil);
+      console.log(muhaqqiHidup)
+
+      //sedang dicari: apakah saudara perempuan tetap menjadi asabah pada kasus musytarakah
+      //meskipun tidak ada saudara laki laki. Contoh: 1 kakek dan 2 anak PR karena dibagian ini
+      //jika asabah maka kakek mendapat lebih banyak dibandingkan non asabah keduanya
+      //tapi dari tulisan halaman 74 buku kuliah alAzhar maddah mawaris contoh di atas kakek akan mendapat secara asabah
+      //yang mana lebih baik dari mendapat bagian 1/3 dan itu hanya terjadi jika anak PR hadi sebagai asabah
+      //bukan pengambil bagian 2/3.
+      //sementara kita akan masukkan saudariYB dan saudariY sebagai asabah pada isu musytarakah
+      if(muhaqqiHidup.includes("kakekY") && 
+          ((muhaqqiHidup.includes("saudaraYB") || muhaqqiHidup.includes("saudaraY") || muhaqqiHidup.includes("saudariYB") || muhaqqiHidup.includes("saudariY")) && muhaqqiHidup.length == 2) || 
+          (((muhaqqiHidup.includes("saudaraYB") && muhaqqiHidup.includes("saudariYB")) || (muhaqqiHidup.includes("saudaraY") && muhaqqiHidup.includes("saudariY"))) && muhaqqiHidup.length == 3)
+        ) {
+        let p1 = harta / 3;
+        let p2;
+        if(muhaqqiHidup.includes("saudaraYB") && muhaqqiHidup.includes("saudariYB")) {
+          p2 = harta / (hasil["saudaraYB"]["jumlah"] * 2 + hasil["saudariYB"]["jumlah"] + hasil["kakekY"]["jumlah"] * 2);
+        }
+
+        if(muhaqqiHidup.includes("saudaraYB")) {
+          p2 = harta / (hasil["saudaraYB"]["jumlah"] + hasil["kakekY"]["jumlah"]);  
+        }
+
+        if(muhaqqiHidup.includes("saudariYB")) {
+          p2 = (harta / (hasil["saudariYB"]["jumlah"] + hasil["kakekY"]["jumlah"] * 2)) * 2;  
+        }
+
+        if(muhaqqiHidup.includes("saudaraY") && muhaqqiHidup.includes("saudariY")) {
+          p2 = (harta / (hasil["saudaraY"]["jumlah"] * 2 + hasil["saudariY"]["jumlah"] + hasil["kakekY"]["jumlah"] * 2)) * 2;
+        }
+
+        if(muhaqqiHidup.includes("saudaraY")) {
+          p2 = harta / (hasil["saudaraY"]["jumlah"] + hasil["kakekY"]["jumlah"]);  
+        }
+
+        if(muhaqqiHidup.includes("saudariY")) {
+          p2 = (harta / (hasil["saudariY"]["jumlah"] + hasil["kakekY"]["jumlah"] * 2)) * 2;  
+        }
+
+        if (p1 > p2) {
+          hasil["kakekY"]["bagian"] = p1;
+          hasil["kakekY"]["asabah"] = false;
+          hasil["kakekY"]["frac"] = {pembilang: 1, penyebut: 3};
+        }
+
+        if (p1 < p2) {
+          // lanjut sebagai asabah
+          console.log("sebagai asabah")
+        }
+
+        //untuk kakek dan saudariYB (tanpa saudaraYB)
+        if (p1 < p2 && muhaqqiHidup.includes("saudariYB") && muhaqqiHidup.length == 2) {
+          // lanjut sebagai asabah
+          console.log("sebagai asabah")
+          hasil["saudariYB"]["bagian"] = null;
+          hasil["saudariYB"]["asabah"] = true;
+          delete hasil["saudariYB"]["frac"];
+        }
+
+        //untuk kakek dan saudariY (tanpa saudaraY)
+        if (p1 < p2 && muhaqqiHidup.includes("saudariY") && muhaqqiHidup.length == 2) {
+          // lanjut sebagai asabah
+          console.log("sebagai asabah")
+          hasil["saudariY"]["bagian"] = null;
+          hasil["saudariY"]["asabah"] = true;
+          delete hasil["saudariY"]["frac"];
+        }
+
+        //isu jika ternyata 1/3 lebih besar dari asabah, apakah anak pr 
+        //mendapat bagian secara asabah atau 2/3? ya, meskipun kelihatannya hasilnya tetap sama, hanya takut ada edge cases.
+
+        if (p1 == p2) {
+          hasil["kakekY"]["bagian"] = p1;
+          hasil["kakekY"]["asabah"] = false;
+          hasil["kakekY"]["frac"] = {pembilang: 1, penyebut: 3};
+        }
+        
+      }
+
+      // jad maal ikhwah ketika ada ahlu fard lain 
+      if(muhaqqiHidup.includes("kakekY") && 
+          (muhaqqiHidup.includes("saudaraYB") || muhaqqiHidup.includes("saudaraY") || muhaqqiHidup.includes("saudariYB") || muhaqqiHidup.includes("saudariY"))
+        ) {
+
+          console.log("blok")
+          let hartaBagian = 0;
+
+          for (const item in hasil) {
+            if(item == "kakekY" || item == "saudaraYB" || item == "saudariYB" || item == "saudaraY" || item == "saudariY") continue;
+            if(hasil[item].bagian !== null) {
+              hartaBagian += hasil[item].bagian;
+            }
+          }
+
+          console.log(hartaBagian);
+          let hartaAsabah = harta - hartaBagian;
+
+          if (hartaBagian <= harta / 2) {
+            console.log("lebih kecil sama dengan setengah harta")
+            let jmlhSaudara = 0;
+            let jmlhSaudari = 0;
+            if (muhaqqiHidup.includes("saudaraYB")) {
+              jmlhSaudara += hasil["saudaraYB"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudaraY")) {
+              jmlhSaudara += hasil["saudaraY"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudariYB")) {
+              jmlhSaudari += hasil["saudariYB"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudariY")) {
+              jmlhSaudari += hasil["saudariY"]["jumlah"];
+            }
+
+            if(jmlhSaudara * 2 + jmlhSaudari <= 4) {
+              console.log("lanjut sebagai asabah")
+              delete hasil["kakekY"]["frac"];
+              hasil["kakekY"]["bagian"] = null;
+            } else {
+              console.log(hartaAsabah)
+              hasil["kakekY"]["bagian"] = hartaAsabah / 3;
+              hasil["kakekY"]["asabah"] = false;
+              hasil["kakekY"]["frac"] = {pembilang: 1, penyebut: 3, sumber: "hartaAsabah"}
+            }
+          }
+
+          if (hartaBagian == harta * 2 / 3) {
+            console.log("lebih kecil sama dengan setengah harta")
+            let jmlhSaudara = 0;
+            let jmlhSaudari = 0;
+            if (muhaqqiHidup.includes("saudaraYB")) {
+              jmlhSaudara += hasil["saudaraYB"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudaraY")) {
+              jmlhSaudara += hasil["saudaraY"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudariYB")) {
+              jmlhSaudari += hasil["saudariYB"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudariY")) {
+              jmlhSaudari += hasil["saudariY"]["jumlah"];
+            }
+
+            if(jmlhSaudari == 1) {
+              console.log("lanjut sebagai asabah")
+              delete hasil["kakekY"]["frac"];
+              hasil["kakekY"]["bagian"] = null;
+            } else {
+              hasil["kakekY"]["bagian"] = harta / 6;
+              hasil["kakekY"]["asabah"] = false;
+              hasil["kakekY"]["frac"] = {pembilang: 1, penyebut: 6,}
+            }
+          }
+
+          if (hartaBagian > harta / 2 && hartaBagian < harta * 2 / 3 ) {
+            console.log("lebih kecil sama dengan setengah harta")
+            let jmlhSaudara = 0;
+            let jmlhSaudari = 0;
+            if (muhaqqiHidup.includes("saudaraYB")) {
+              jmlhSaudara += hasil["saudaraYB"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudaraY")) {
+              jmlhSaudara += hasil["saudaraY"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudariYB")) {
+              jmlhSaudari += hasil["saudariYB"]["jumlah"];
+            }
+            if (muhaqqiHidup.includes("saudariY")) {
+              jmlhSaudari += hasil["saudariY"]["jumlah"];
+            }
+
+            if(jmlhSaudara * 2 + jmlhSaudari <= 2) {
+              console.log("lanjut sebagai asabah")
+              delete hasil["kakekY"]["frac"];
+              hasil["kakekY"]["bagian"] = null;
+            } else {
+              hasil["kakekY"]["bagian"] = harta / 6;
+              hasil["kakekY"]["asabah"] = false;
+              hasil["kakekY"]["frac"] = {pembilang: 1, penyebut: 6,}
+            }
+          }
+
+          console.log(hartaBagian, hartaAsabah)
+
+          if(hartaBagian >= harta || hartaAsabah <= harta / 6 ) {
+            hasil["kakekY"]["bagian"] = harta / 6;
+            hasil["kakekY"]["asabah"] = false;
+            hasil["kakekY"]["frac"] = {pembilang: 1, penyebut: 6,}
+
+          }
+        }
+
+
+      let hartaBagian = 0;
+      
+      const muhaqqiAsabah = {
+        jumlahLk: 0,
+        jumlahPr: 0,
+      }
+
+      console.log(muhaqqiHidup)
+
+      for (const item in hasil) {
+        if(hasil[item].bagian !== null) {
+          hartaBagian += hasil[item].bagian;
+        }
+      }
+
+      let hartaAsabah = harta - hartaBagian;
+
+      console.log(hartaAsabah)
+
+      if(Math.abs(harta - hartaBagian) < 0.000001){
+        hartaAsabah = 0;
+      }
+
+      
+
+      for (const item in hasil) {
+        if(hasil[item]["jk"] == "lk" && hasil[item]["asabah"] == true) {
+          muhaqqiAsabah.jumlahLk += hasil[item]["jumlah"];
+        } else if(hasil[item]["jk"] == "pr" && hasil[item]["asabah"] == true && item == "ibu") {
+          hasil[item]["bagian"] = hartaAsabah / 3;
+          hartaAsabah -= hartaAsabah / 3;
+        } else if (hasil[item]["jk"] == "pr" && hasil[item]["asabah"] == true) {
+          muhaqqiAsabah.jumlahPr += hasil[item]["jumlah"]
+        }      
+      }
+
+      console.log(muhaqqiAsabah);
+
+      if (hartaAsabah < 0) {
+        aul(hasil, harta);
+        hartaAsabah = 0;
+      }
+      
+
+      
+      let hasilAsabah = asabah(muhaqqiAsabah, hartaAsabah)
+
+      //untuk jad maal ikhwah
+      if(muhaqqiHidup.includes("kakekY") && hasil["kakekY"]["asabah"] == true && (muhaqqiHidup.includes("saudaraYB") || muhaqqiHidup.includes("saudaraY"))) {
+        hasil["kakekY"]["bagian"] = (hasilAsabah["bagianLk"] / muhaqqiAsabah["jumlahLk"]);
+        hasilAsabah.bagianLk -= (hasilAsabah.bagianLk / muhaqqiAsabah.jumlahLk) 
+      }
+
+      
+      for (const key in hasil) {
+        //untuk jad maal ikhwah
+        if(muhaqqiHidup.includes("kakekY") && hasil["kakekY"]["asabah"] == true && (muhaqqiHidup.includes("saudaraYB") || muhaqqiHidup.includes("saudaraY"))) {
+          if(key == "kakekY") continue;
+        }
+
+        if(hasil[key].asabah && hasil[key].jk == "lk") {
+          if(hasil[key].bagian == null) {
+            hasil[key].bagian = hasilAsabah.bagianLk
+          } else {
+            hasil[key].bagian += hasilAsabah.bagianLk
+          }
+          
+        }
+
+        if(hasil[key].asabah && hasil[key].jk == "pr" && key !== "ibu") {
+          if(hasil[key].bagian == null) {
+            hasil[key].bagian = hasilAsabah.bagianPr
+          } else {
+            hasil[key].bagian += hasilAsabah.bagianPr
+          }
+        }
+      }
+
+      //masalah musytarakah saudaraYB
+      if(muhaqqiHidup.includes("saudara/iB") && muhaqqiHidup.includes("saudaraYB")  &&hasil["saudaraYB"]["bagian"] == 0) {
+        if(muhaqqiHidup.includes("saudariYB")) {
+          hasil["saudara/iB & saudaraYB & saudariYB"] = hasil["saudara/iB"];
+          hasil["saudara/iB & saudaraYB & saudariYB"]["jumlah"] += hasil["saudaraYB"]["jumlah"] + hasil["saudariYB"]["jumlah"];
+          delete hasil["saudara/iB"];
+          delete hasil["saudaraYB"];
+          delete hasil["saudariYB"];
+        } else {
+          hasil["saudara/iB & saudaraYB"] = hasil["saudara/iB"];
+          hasil["saudara/iB & saudaraYB"]["jumlah"] += hasil["saudaraYB"]["jumlah"];
+          delete hasil["saudara/iB"];
+          delete hasil["saudaraYB"];
+        }
+      }
+      
+      let nilai = 0;
+
+      for(const item in hasil) {
+        nilai += hasil[item]["bagian"]
+      }
+
+      console.log(nilai);
+      console.log( !(Math.abs(harta - nilai) < 0.000001));
+      
+
+      if(harta > nilai && !(Math.abs(harta - nilai) < 0.000001)) {
+        console.log("terjadi rad")
+        rad(hasil, muhaqqiHidup, harta);
+      }
+
+      return hasil;
+      
+    }
+
+    function anakLk (jumlah, harta, muhaqqiHidup) {
+      if(muhaqqiHidup.indexOf("saudaraYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudaraYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudariYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudaraY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudaraY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudariY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("cucuLkdLk") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("cucuLkdLk"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("cucuPrdLk") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("cucuPrdLk"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudara/iB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudara/iB"),1)
+      }
+      
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Anak Laki-Laki"}
+    }
+
+    function anakPr(jumlah, harta, muhaqqiHidup) {
+
+      if(muhaqqiHidup.indexOf("cucuPrdLk") >= 0 && jumlah > 1) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("cucuPrdLk"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudara/iB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudara/iB"),1)
+      }
+
+      if (muhaqqiHidup.includes("anakLk")) {
+        return {jumlah, asabah: true, bagian: null, jk: "pr", namaDisplay: "Anak Perempuan"}
+      }
+      if (jumlah == 1){
+       return {jumlah, asabah: false, bagian: harta / 2, jk: "pr", frac: {pembilang: 1, penyebut: 2}, namaDisplay: "Anak Perempuan"}
+      }
+      if (jumlah >= 2) {
+        return {jumlah, asabah: false, bagian: harta * 2 / 3, jk: "pr", frac: {pembilang: 2, penyebut: 3}, namaDisplay: "Anak Perempuan"} 
+      }
+    }
+
+    function ayah(jumlah, harta, muhaqqiHidup) {
+
+      if(muhaqqiHidup.indexOf("kakekY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("kakekY"),1)
+      }
+      
+      if(muhaqqiHidup.indexOf("nenekY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("nenekY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudaraYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudaraYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudariYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudaraY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudaraY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudariY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudara/iB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudara/iB"),1)
+      }
+
+      if(!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk") 
+          && !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuPrdLk")){
+        return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Ayah"}
+      }
+      
+      if(!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk") &&
+          (muhaqqiHidup.includes("anakPr") || muhaqqiHidup.includes("cucuPrdLk"))){
+        return {jumlah, asabah: true, bagian: harta / 6, jk: "lk", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Ayah"} // + "asabah";
+      }
+
+      return {jumlah, asabah: false, bagian: harta / 6, jk: "lk", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Ayah"};
+    }
+
+    function ibu(jumlah, harta, muhaqqiHidup, data) {
+
+      if(muhaqqiHidup.indexOf("nenekY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("nenekY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("nenekB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("nenekB"),1)
+      }
+
+      if (muhaqqiHidup.includes("ayah") && (muhaqqiHidup.includes("istri") || muhaqqiHidup.includes("suami")) && muhaqqiHidup.includes("ibu") && muhaqqiHidup.length == 3){
+        return {jumlah, asabah: true, bagian: null, jk: "pr", namaDisplay: "Ibu"}
+      }
+
+      //ada tambahan jika mayyit memiliki saudara atau saudari yang berjumlah 2 atau lebih (later)
+      if(muhaqqiHidup.includes("anakLk") || muhaqqiHidup.includes("cucuLkdLk") ||
+          muhaqqiHidup.includes("anakPr") || muhaqqiHidup.includes("cucuPrdLk") ||
+          data["saudaraYB"] >= 2 || data["saudaraY"] >= 2 || data["saudariYB"] >= 2 || data["saudariY"] >= 2 || data["saudara/iB"] >= 2 ||
+          (data["saudaraYB"] == 1 && (data["saudariYB"] == 1 || data["saudaraY"] == 1 || data["saudariY"] == 1 || data["saudara/iB"] == 1)) ||
+          (data["saudariYB"] == 1 && (data["saudaraYB"] == 1 || data["saudaraY"] == 1 || data["saudariY"] == 1 || data["saudara/iB"] == 1)) ||
+          (data["saudaraY"] == 1 && (data["saudariYB"] == 1 || data["saudaraYB"] == 1 || data["saudariY"] == 1 || data["saudara/iB"] == 1)) ||
+          (data["saudariY"] == 1 && (data["saudariYB"] == 1 || data["saudaraY"] == 1 || data["saudaraYB"] == 1 || data["saudara/iB"] == 1)) ||
+          (data["saudara/iB"] == 1 && (data["saudariYB"] == 1 || data["saudaraY"] == 1 || data["saudaraYB"] == 1 || data["saudariY"] == 1))
+        ) {
+        return {jumlah, asabah: false, bagian: harta / 6, jk: "pr", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Ibu"};
+      }
+
+      //ada tambahan jika mayyit tidak memiliki saudara atau saudari yang berjumlah 2 atau lebih (later)
+      
+        return {jumlah, asabah: false, bagian: harta / 3, jk: "pr", frac: {pembilang: 1, penyebut: 3}, namaDisplay: "Ibu"};
+
+      //1/3 + sisa (umariyatain)
+    }
+
+    function suami(jumlah, harta, muhaqqiHidup) {
+      if(muhaqqiHidup.includes("anakLk") || muhaqqiHidup.includes("cucuLkdLk") ||
+         muhaqqiHidup.includes("anakPr") || muhaqqiHidup.includes("cucuPrdLk")) {
+        return {jumlah, asabah: false, bagian: harta / 4, jk: "lk", frac: {pembilang: 1, penyebut: 4}, namaDisplay: "Suami"};
+      } else {
+        return {jumlah, asabah: false, bagian: harta / 2, jk: "lk", frac: {pembilang: 1, penyebut: 2}, namaDisplay: "Suami"} ;
+      }
+    }
+
+    function istri(jumlah, harta, muhaqqiHidup) {
+      if(muhaqqiHidup.includes("anakLk") || muhaqqiHidup.includes("cucuLkdLk") ||
+         muhaqqiHidup.includes("anakPr") || muhaqqiHidup.includes("cucuPrdLk") ) {
+        return {jumlah, asabah: false, bagian: harta / 8, jk: "pr", frac: {pembilang: 1, penyebut: 8}, namaDisplay: "Istri"};
+      } else {
+        return {jumlah, asabah: false, bagian: harta / 4, jk: "pr", frac: {pembilang: 1, penyebut: 4}, namaDisplay: "Istri"};
+      }
+    }
+
+    function cucuLkdLk(jumlah, harta, muhaqqiHidup){
+
+      //menghijab
+      if(muhaqqiHidup.indexOf("saudaraYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudaraYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudariYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudaraY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudaraY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudariY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudara/iB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudara/iB"),1)
+      }
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Cucu Laki-Laki"}
+    }
+
+    function cucuPrdLk(jumlah, harta, muhaqqiHidup, data) {
+      //menghijab
+      if(muhaqqiHidup.indexOf("saudara/iB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudara/iB"),1)
+      }
+
+      //bagian
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") &&
+          !muhaqqiHidup.includes("cucuLkdLk") &&
+          jumlah == 1
+      ) {
+        return {jumlah, asabah: false, bagian: harta / 2, jk: "pr", frac: {pembilang: 1, penyebut: 2}, namaDisplay: "Cucu Perempuan"}
+      }
+
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") &&
+          !muhaqqiHidup.includes("cucuLkdLk") &&
+          jumlah >= 2
+      ) {
+        return {jumlah, asabah: false, bagian: harta * 2 / 3, jk: "pr", frac: {pembilang: 2, penyebut: 3}, namaDisplay: "Cucu Perempuan"}
+      }
+
+      if (!muhaqqiHidup.includes("anakLk") && 
+          !muhaqqiHidup.includes("cucuLkdLk") &&
+          muhaqqiHidup.includes("anakPr")&&
+          data["anakPr"] == 1
+      ) {
+        return {jumlah, asabah: false, bagian: harta / 6, jk: "pr", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Cucu Perempuan"}
+      }
+
+      if (!muhaqqiHidup.includes("anakLk") &&
+          muhaqqiHidup.includes("cucuLkdLk")
+      ) {
+        return {jumlah, asabah: true, bagian: null, jk: "pr", namaDisplay: "Cucu Perempuan"}
+      }
+    }
+
+    //adanya perbedaan pendapat dalam pewarisan kakek ketika adanya saudara laki laki. maka akan dibuat dua mode
+    // ada 2 madzhab: 1. kakek seperti ayah. 2. kakek dan saudara berbagi dalam warisan
+    function kakekY(jumlah, harta, muhaqqiHidup) {
+
+      
+
+      if(muhaqqiHidup.indexOf("keponakanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      //khilaf
+      if(muhaqqiHidup.indexOf("saudara/iB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudara/iB"),1)
+      }
+
+      if(!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk")  &&
+         !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuPrdLk")){
+        return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Kakek"}
+      }
+      
+      if(!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk") &&
+         (muhaqqiHidup.includes("anakPr") || muhaqqiHidup.includes("cucuPrdLk"))){
+        return {jumlah, asabah: true, bagian: harta / 6, jk: "lk", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Kakek"} // + "asabah";
+      }
+
+      return {jumlah, asabah: false, bagian: harta / 6, jk: "lk", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Kakek"};
+    }
+
+    function nenekY(jumlah, harta, muhaqqiHidup) {
+      //tidak menghijab siapapun
+
+      //bagian
+      return {jumlah, asabah: false, bagian: harta / 6, jk: "pr", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Nenek dari Ayah"}
+    }
+
+    function saudaraYB(jumlah, harta, muhaqqiHidup) {
+
+      //menghijab
+      if(muhaqqiHidup.indexOf("saudaraY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudaraY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("saudariY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Saudara Seayah Seibu"}
+    }
+
+    //menghijab belum dipastikan
+    function saudariYB(jumlah, harta, muhaqqiHidup) {
+      //meghijab
+      if(jumlah >= 2 && muhaqqiHidup.includes("saudariY")) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("saudariY"),1)
+      }
+
+      //bagian
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuLkdLk") && !muhaqqiHidup.includes("cucuPrdLk") &&
+          !muhaqqiHidup.includes("ayah")  &&
+          !muhaqqiHidup.includes("saudaraYB") &&
+          jumlah == 1
+      ) {
+        return {jumlah, asabah: false, bagian: harta / 2, jk: "pr", frac: {pembilang: 1, penyebut: 2}, namaDisplay: "Saudari Seayah Seibu"}
+      }
+
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuLkdLk") && !muhaqqiHidup.includes("cucuPrdLk") &&
+          !muhaqqiHidup.includes("ayah") && 
+          !muhaqqiHidup.includes("saudaraYB") &&
+          jumlah >= 2
+      ) {
+        return {jumlah, asabah: false, bagian: harta * 2 / 3, jk: "pr", frac: {pembilang: 2, penyebut: 3}, namaDisplay: "Saudari Seayah Seibu"}
+      }
+
+      //asabah maal ghair
+
+      if ((!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk") &&
+          !muhaqqiHidup.includes("ayah")  &&
+          muhaqqiHidup.includes("saudaraYB")) ||
+          (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk") &&
+          !muhaqqiHidup.includes("ayah") &&
+          !muhaqqiHidup.includes("saudaraYB") && (muhaqqiHidup.includes("anakPr") || muhaqqiHidup.includes("cucuPrdLk"))) ||
+          muhaqqiHidup.includes("kakekY")
+      ) {
+        return {jumlah, asabah: true, bagian: null, jk: "pr", namaDisplay: "Saudari Seayah Seibu"}
+      }
+
+    }
+
+    function saudaraY(jumlah, harta, muhaqqiHidup) {
+      //menghijab
+
+      if(muhaqqiHidup.indexOf("keponakanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("keponakanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Saudara Seayah"}
+    }
+
+    //tolong revisi lagi nanti. pastikan bagiannya benar. (saudariY)
+    function saudariY(jumlah, harta, muhaqqiHidup, data) {
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuLkdLk") && !muhaqqiHidup.includes("cucuPrdLk") &&
+          !muhaqqiHidup.includes("ayah") &&
+          !muhaqqiHidup.includes("saudaraYB") &&
+          !muhaqqiHidup.includes("saudariYB") &&
+          !muhaqqiHidup.includes("saudaraY") &&
+          jumlah == 1
+      ) {
+        return {jumlah, asabah: false, bagian: harta / 2, jk: "pr", frac: {pembilang: 1, penyebut: 2}, namaDisplay: "Saudari Seayah"}
+      }
+
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuLkdLk") && !muhaqqiHidup.includes("cucuPrdLk") &&
+          !muhaqqiHidup.includes("ayah") &&
+          !muhaqqiHidup.includes("saudaraYB") &&
+          !muhaqqiHidup.includes("saudariYB") &&
+          !muhaqqiHidup.includes("saudaraY") &&
+          jumlah >= 2
+      ) {
+        return {jumlah, asabah: false, bagian: harta * 2 / 3, jk: "pr", frac: {pembilang: 2, penyebut: 3}, namaDisplay: "Saudari Seayah"}
+      }
+
+      if (!muhaqqiHidup.includes("saudaraYB") && 
+          !muhaqqiHidup.includes("saudaraY") &&
+          muhaqqiHidup.includes("saudariYB")&&
+          !muhaqqiHidup.includes("saudaraY") &&
+          !muhaqqiHidup.includes("anakPr") &&
+          data["saudariYB"] == 1
+      ) {
+        return {jumlah, asabah: false, bagian: harta / 6, jk: "pr", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Saudari Seayah"}
+      }
+
+      if ((!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk") &&
+          !muhaqqiHidup.includes("ayah") &&
+          !muhaqqiHidup.includes("saudaraYB") &&
+          muhaqqiHidup.includes("saudaraY")) || 
+          (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("cucuLkdLk") &&
+          !muhaqqiHidup.includes("ayah") &&
+          !muhaqqiHidup.includes("saudaraYB") &&
+          !muhaqqiHidup.includes("saudaraY") && (muhaqqiHidup.includes("anakPr") || muhaqqiHidup.includes("cucuPrdLk"))) ||
+          muhaqqiHidup.includes("kakekY")
+      ) {
+        return {jumlah, asabah: true, bagian: null, jk: "pr", namaDisplay: "Saudari Seayah"}
+      }
+
+    }
+
+    function keponakanYB(jumlah, harta, muhaqqiHidup) {
+      //menghijab
+
+      if(muhaqqiHidup.indexOf("keponakanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("keponakanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Keponakan I"}
+    }
+
+    function keponakanY(jumlah, harta, muhaqqiHidup){
+
+      //menghijab
+
+      if(muhaqqiHidup.indexOf("pamanYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Keponakan II"}
+    }
+
+    function pamanYB(jumlah, harta, muhaqqiHidup){
+
+      //menghijab
+
+      if(muhaqqiHidup.indexOf("pamanY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("pamanY"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "Paman I"}
+    }
+
+    function pamanY(jumlah, harta, muhaqqiHidup) {
+      //menghijab
+
+      if(muhaqqiHidup.indexOf("sepupuYB") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuYB"),1)
+      }
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk",  namaDisplay: "Paman II"}
+    }
+
+    function sepupuYB(jumlah, harta, muhaqqiHidup) {
+      //menghijab
+
+      if(muhaqqiHidup.indexOf("sepupuY") >= 0) {
+        muhaqqiHidup.splice(muhaqqiHidup.indexOf("sepupuY"),1)
+      }
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk",  namaDisplay: "sepupu I"}
+    }
+
+    function sepupuY(jumlah, harta, muhaqqiHidup){
+      //tidak menghijab siapapun
+
+      //bagian
+      return {jumlah, asabah: true, bagian: null, jk: "lk", namaDisplay: "sepupu II"}
+    }
+
+    
+    
+    function nenekB(jumlah, harta, muhaqqiHidup) {
+      //tidak menghijab siapapun
+
+      //bagian
+      return {jumlah, asabah: false, bagian: harta / 6, jk: "pr", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Nenek dari Ibu"}
+    }
+
+    function saudaraiB(jumlah, harta, muhaqqiHidup){
+      //tidak menghijab siapapun
+
+      //bagian
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuLkdLk") && !muhaqqiHidup.includes("cucuPrdPr") && 
+          !muhaqqiHidup.includes("ayah") && !muhaqqiHidup.includes("kakek") &&
+          jumlah >= 2
+      ) {
+        return {jumlah, asabah: false, bagian: harta / 3, jk: "pr", frac: {pembilang: 1, penyebut: 3}, namaDisplay: "Saudara & Saudari Seibu"}
+      }
+
+      if (!muhaqqiHidup.includes("anakLk") && !muhaqqiHidup.includes("anakPr") && !muhaqqiHidup.includes("cucuLkdLk") && !muhaqqiHidup.includes("cucuPrdPr") && 
+          !muhaqqiHidup.includes("ayah") && !muhaqqiHidup.includes("kakek") &&
+          jumlah == 1
+      ) {
+        return {jumlah, asabah: false, bagian: harta / 6, jk: "pr", frac: {pembilang: 1, penyebut: 6}, namaDisplay: "Saudara & Saudari Seibu"}
+      }
+
+    }
+
+    function asabah(listAsabah, hartaAsabah) {
+      const asabahLk = listAsabah.jumlahLk;
+      const asabahPr = listAsabah.jumlahPr;
+      let bagianLk = 0;
+      let bagianPr = 0;
+      let hasil = {}
+
+      if(asabahPr > 0) {
+        hasil["bagianLk"] = hartaAsabah / (asabahLk * 2 + asabahPr) * 2 * asabahLk ;
+        hasil["bagianPr"] = hartaAsabah / (asabahLk * 2 + asabahPr) * asabahPr;
+      } else {
+        hasil["bagianLk"] = hartaAsabah ;
+      }
+      return hasil;
+    }
+
+    function aul(hasil, harta) {
+      let pen = [];
+      
+      for(const item in hasil) {
+        if(hasil[item]["asabah"] !== true) {
+          pen.push(hasil[item]["frac"]["penyebut"])
+        }
+      }
+
+      let KPK = pen.reduce((acc, num) => lcm(acc,num));
+
+      for(const item in hasil) {
+        if(hasil[item]["asabah"] !== true) {
+          hasil[item]["frac"]["pembilang"] *=  (KPK / hasil[item]["frac"]["penyebut"]);
+        }
+      }
+
+      let amb = 0;
+
+      for (const item in hasil) {
+        if(hasil[item]["asabah"] !== true) {
+          amb += hasil[item]["frac"]["pembilang"]
+        }
+      }
+
+      for (const item in hasil) {
+        if(hasil[item]["asabah"] !== true) {
+          hasil[item]["frac"]["penyebut"] = amb;
+        }
+      }
+
+      for (const item in hasil) {
+        if(hasil[item]["asabah"] !== true) {
+          hasil[item]["bagian"] = harta * hasil[item]["frac"]["pembilang"] / hasil[item]["frac"]["penyebut"];
+        }
+      }
+    }
+
+    function rad(hasil, muhaqqiHidup, harta) {
+      let berhaqRad = muhaqqiHidup.filter(item => item !== "istri" && item !== "suami");
+      console.log(berhaqRad);
+
+      if (!muhaqqiHidup.includes("istri") && !muhaqqiHidup.includes("suami")) {
+        if(berhaqRad.length == 1) {
+          hasil[berhaqRad[0]]["bagian"] = harta;
+        } else {
+          let pen = [];
+      
+          for(const item in hasil) {
+            pen.push(hasil[item]["frac"]["penyebut"])
+          }
+
+          let KPK = pen.reduce((acc, num) => lcm(acc,num));
+
+          for(const item in hasil) {
+            hasil[item]["frac"]["pembilang"] *=  (KPK / hasil[item]["frac"]["penyebut"]);
+          }
+
+          let jumlahSahm = 0;
+
+          for (const item in hasil) {
+            jumlahSahm += hasil[item]["frac"]["pembilang"];
+          }
+
+          for (const item in hasil) {
+            hasil[item]["frac"]["penyebut"] = jumlahSahm;
+          }
+
+          for (const item in hasil) {
+            hasil[item]["bagian"] = harta * hasil[item]["frac"]["pembilang"] / hasil[item]["frac"]["penyebut"];
+          }
+
+        }
+      }
+
+      if (muhaqqiHidup.includes("istri") || muhaqqiHidup.includes("suami")) {
+        let hartaRad;
+        if(muhaqqiHidup.includes("istri")) {
+          hartaRad = harta - hasil["istri"]["bagian"];
+        }
+
+        if (muhaqqiHidup.includes("suami")) {
+          hartaRad = harta - hasil["suami"]["bagian"];
+        }
+
+        console.log(hartaRad);
+
+        if (berhaqRad.length == 1) {
+          hasil[berhaqRad[0]]["bagian"] = hartaRad;
+        } else {
+          let pen = [];
+      
+          for(const item in hasil) {
+            if (berhaqRad.includes(item)) {
+              pen.push(hasil[item]["frac"]["penyebut"])
+            }
+          }
+
+          let KPK = pen.reduce((acc, num) => lcm(acc,num));
+
+          for(const item in hasil) {
+            if (berhaqRad.includes(item)) {
+              hasil[item]["frac"]["pembilang"] *=  (KPK / hasil[item]["frac"]["penyebut"]);
+            }
+          }
+
+          let jumlahSahm = 0;
+
+          for (const item in hasil) {
+            if (berhaqRad.includes(item)) {
+              jumlahSahm += hasil[item]["frac"]["pembilang"];
+            }
+          }
+
+          for (const item in hasil) {
+            if (berhaqRad.includes(item)) {
+              hasil[item]["frac"]["penyebut"] = jumlahSahm;
+            }
+          }
+
+          for (const item in hasil) {
+            if (berhaqRad.includes(item)) {
+              hasil[item]["bagian"] = hartaRad * hasil[item]["frac"]["pembilang"] / hasil[item]["frac"]["penyebut"];
+            }
+          }
+        }
+      }
+    }
+
+    let list = {
+      
+    }
+
+    // cicit dan ayahnya kakek
+
+     const berhaq = {
+      Ayah: {hidupId: "ayahHidup", wafatId: "ayahWafat", statNama: "statAyah", jumlahNama: "jumlahAyah" , dataset: "ayah" },
+      Ibu: {hidupId: "ibuHidup", wafatId: "ibuWafat", statNama: "statIbu", jumlahNama: "jumlahIbu" , dataset: "ibu" },
+      "Anak Laki-Laki": {hidupId: "anakLkHidup", wafatId: "anakLkWafat", statNama: "statAnakLk", jumlahNama: "jumlahAnakLk" , dataset: "anakLk" },
+      "Anak Perempuan": {hidupId: "anakPrHidup", wafatId: "anakPrWafat", statNama: "statAnakPr", jumlahNama: "jumlahAnakPr" , dataset: "anakPr" },
+      suami: {hidupId: "suamiHidup", wafatId: "suamiWafat", statNama: "statPasangan", jumlahNama: "jumlahSuami" , dataset: "suami" },
+      istri: {hidupId: "istriHidup", wafatId: "istriWafat", statNama: "statPasangan", jumlahNama: "jumlahIstri" , dataset: "istri" },
+      "Cucu Laki-Laki dari Anak Laki-Laki": {hidupId: "cucuLkdLkHidup", wafatId: "cucuLkdLkWafat", statNama: "statCucuLkdLk", jumlahNama: "jumlahCucuLkdLk" , dataset: "cucuLkdLk" },
+      "Cucu Perempuan dari Anak Laki-Laki": {hidupId: "cucuPrdLkHidup", wafatId: "cucuPrdLkWafat", statNama: "statCucuPrdLk", jumlahNama: "jumlahCucuPrdLk" , dataset: "cucuPrdLk" },
+      "Kakek dari Ayah": {hidupId: "kakekYHidup", wafatId: "kakekYWafat", statNama: "statKakekY", jumlahNama: "jumlahKakekY" , dataset: "kakekY" },
+      "Nenek dari Ayah": {hidupId: "nenekYHidup", wafatId: "nenekYWafat", statNama: "statNenekY", jumlahNama: "jumlahNenekY" , dataset: "nenekY" },
+      "Saudara Seibu dan Seayah": {hidupId: "saudaraYBHidup", wafatId: "saudaraYBWafat", statNama: "statSaudaraYB", jumlahNama: "jumlahSaudaraYB" , dataset: "saudaraYB" },
+      "Saudari Seibu dan Seayah": {hidupId: "saudariYBHidup", wafatId: "saudariYBWafat", statNama: "statSaudariYB", jumlahNama: "jumlahSaudariYB" , dataset: "saudariYB" },
+      "Saudara Seayah": {hidupId: "saudaraYHidup", wafatId: "saudaraYWafat", statNama: "statSaudaraY", jumlahNama: "jumlahSaudaraY" , dataset: "saudaraY" },
+      "Saudari Seayah": {hidupId: "saudariYHidup", wafatId: "saudariYWafat", statNama: "statSaudariY", jumlahNama: "jumlahSaudariY" , dataset: "saudariY" },
+      "Anak Laki-Laki Saudara Seayah dan Seibu (keponakan I)": {hidupId: "keponakanYBHidup", wafatId: "keponakanYBWafat", statNama: "statKeponakanYB", jumlahNama: "jumlahKeponakanYB" , dataset: "keponakanYB" },
+      "Anak Laki-Laki Saudara Seayah (keponakanII)": {hidupId: "keponakanYHidup", wafatId: "keponakanYWafat", statNama: "statKeponakanY", jumlahNama: "jumlahKeponakanY" , dataset: "keponakanY" },
+      "saudara Ayah Seayah dan Seibu (paman I)": {hidupId: "pamanYBHidup", wafatId: "pamanYBWafat", statNama: "statPamanYB", jumlahNama: "jumlahPamanYB" , dataset: "pamanYB" },
+      "saudara Ayah Seayah (paman II)": {hidupId: "pamanYHidup", wafatId: "pamanYWafat", statNama: "statPamanY", jumlahNama: "jumlahPamanY" , dataset: "pamanY" },
+      "Anak Laki-Laki dari paman Seayah dan Seibu (sepupu I)": {hidupId: "sepupuYBHidup", wafatId: "sepupuYBWafat", statNama: "statSepupuYB", jumlahNama: "jumlahSepupuYB" , dataset: "sepupuYB" },
+      "Anak Laki-Laki dari paman Seayah (sepupu II)": {hidupId: "sepupuYHidup", wafatId: "sepupuYWafat", statNama: "statSepupuY", jumlahNama: "jumlahSepupuY" , dataset: "sepupuY" },
+      "Nenek dari Ibu": {hidupId: "nenekBHidup", wafatId: "nenekBWafat", statNama: "statNenekB", jumlahNama: "jumlahNenekB" , dataset: "nenekB" },
+      "Saudara dan Saudari Seibu": {hidupId: "saudara/iBHidup", wafatId: "saudara/iBWafat", statNama: "statSaudara/iB", jumlahNama: "jumlahSaudara/iB" , dataset: "saudara/iB" },
+
+    }
+
+    const inputContainer = document.querySelector(".input-container");
+
+    for (const item in berhaq) {
+
+      inputContainer.insertAdjacentHTML("beforeend", 
+        `
+          <div class="form-group">
+            <label for="${berhaq[item]["statNama"]}">${item}</label>
+            <div class="radio-container">
+              <div>
+                <input type="radio" name="${berhaq[item]["statNama"]}" id="${berhaq[item]["hidupId"]}" class="add" data-nama="${berhaq[item]["dataset"]}" >  
+                <label for="${berhaq[item]["hidupId"]}">Hidup</label>
+              </div>
+              
+              <div>
+                <input type="radio" name="${berhaq[item]["statNama"]}" id="${berhaq[item]["wafatId"]}" class="delete" data-nama="${berhaq[item]["dataset"]}">  
+                <label for="${berhaq[item]["wafatId"]}">Wafat/Tidak ada</label>
+              </div>
+              
+              <div>
+                <label class="jumlahLabel" for="${berhaq[item]["jumlahNama"]}">Jumlah:</label>
+                <input type="number" id="${berhaq[item]["jumlahNama"]}" class="jumlah" value="1" min="1" data-nama="${berhaq[item]["dataset"]}">  
+              </div>
+              
+            </div>
+          </div>
+        `
+      )
+    }
+
+    inputContainer.insertAdjacentHTML("beforeend", 
+      `
+        <button id="calculate">HITUNG</button>
+      `
+    )
+    
+
+    let addElements = document.getElementsByClassName("add")
+
+    for (let index = 0; index < addElements.length; index++) {
+      const element = addElements[index];
+      const nama = element.dataset.nama;
+      const jumlah = element.parentElement.parentElement.lastElementChild.querySelector(".jumlah")
+      const jumlahLabel = element.parentElement.parentElement.lastElementChild.querySelector(".jumlahLabel")
+
+
+      element.addEventListener("click", () => {
+        list[nama] = jumlah.valueAsNumber;
+        jumlah.style.display = "inline";
+        jumlahLabel.style.display = "inline";
+
+        if(nama == "suami") {
+          delete list["istri"];
+        }
+
+        if(nama == "istri") {
+          delete list["suami"]
+        }
+      })
+      
+    }
+
+    let deleteElements = document.getElementsByClassName("delete")
+
+    for (let index = 0; index < deleteElements.length; index++) {
+      const element = deleteElements[index];
+      const nama = element.dataset.nama;
+      const jumlah = element.parentElement.parentElement.lastElementChild.querySelector(".jumlah")
+      const jumlahLabel = element.parentElement.parentElement.lastElementChild.querySelector(".jumlahLabel")
+
+      element.addEventListener("click", () => {
+        delete list[nama]
+        jumlah.style.display = "none";
+        jumlahLabel.style.display = "none";
+
+        if(nama == "suami") {
+          delete list["istri"];
+        }
+
+        if(nama == "istri") {
+          delete list["suami"]
+        }
+      })
+      
+    }
+
+    let jumlahElements = document.getElementsByClassName("jumlah")
+
+    for (let index = 0; index < jumlahElements.length; index++) {
+      const element = jumlahElements[index];
+      const nama = element.dataset.nama;
+
+      element.addEventListener("change", () => {
+        if(element.value == "") {
+          element.value = 1;
+        }
+      })
+
+      element.addEventListener("change", () => {
+        list[nama] = element.valueAsNumber;
+      })
+      
+    }
+
+    let jumlahHartaElement = document.querySelector("#jumlahHarta");
+
+    //document.querySelector("#show").addEventListener("click", () => console.log(list))
+    document.querySelector("#calculate").addEventListener("click", () =>{
+      if (Object.keys(list).length === 0) return;
+      let hasil = mawaris(list, jumlahHartaElement.valueAsNumber);
+      let container = document.querySelector("#hasilMawaris");
+      let radios = document.querySelector(".input-container").getElementsByTagName("input");
+      let jumlah = document.querySelector(".input-container").getElementsByClassName("jumlah");
+      let jumlahLabel = document.querySelector(".input-container").getElementsByClassName("jumlahLabel");
+      container.innerHTML = "";
+
+      container.insertAdjacentHTML("beforeend", 
+        `<tr>
+        <th>Muhaqqi</th>
+        <th>Bagian</th>
+        </tr>`
+      )
+
+      for(const item in hasil) {
+        
+        let muhaqqi = `<th> ${hasil[item]["namaDisplay"]}</th>`;
+        let bagian = `<td> ${hasil[item]["bagian"]}</td>`
+
+        container.insertAdjacentHTML("beforeend", 
+        `<tr>
+          ${muhaqqi}
+          ${bagian}
+        </tr>`)
+      }
+
+      // reset all radio
+      for(const item of radios) {
+        item.checked = false;
+      }
+
+      //display none all jumlah
+      for(const item of jumlah) {
+        item.style.display = "none";
+      }
+
+      for(const item of jumlahLabel) {
+        item.style.display = "none";
+      }
+
+      list = {};
+
+    })
+
+   
+    
+  </script>
+</body>
+</html>
